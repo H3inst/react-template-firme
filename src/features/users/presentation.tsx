@@ -7,6 +7,7 @@ interface IUsersRenderProps {
   users: IUser[];
   isLoadingUsers: boolean;
   onOpenUser: (userId: number) => void;
+  onSaveUser: (user: IUser) => void;
 }
 
 export default function UsersRender(props: IUsersRenderProps) {
@@ -61,7 +62,13 @@ export default function UsersRender(props: IUsersRenderProps) {
         >
           <Icons.ListTodo width={16} />
         </Mantine.ActionIcon>
-        <Mantine.ActionIcon size="md" variant="subtle">
+        <Mantine.ActionIcon
+          size="md"
+          variant="subtle"
+          onClick={() => {
+            props.onSaveUser(user);
+          }}
+        >
           <Icons.Pin width={16} />
         </Mantine.ActionIcon>
       </Mantine.Group>

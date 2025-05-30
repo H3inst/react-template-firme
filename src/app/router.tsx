@@ -12,7 +12,7 @@ export default function Router() {
         <Route path={routes.root} element={<LayoutPage />}>
           <Route path={routes.posts} element={<PostsPage />} />
           <Route path={routes.users} element={<UsersPage />} />
-          <Route path={routes.photos} />
+          <Route path={routes.saved} />
         </Route>
       </Routes>
     </BrowserRouter>

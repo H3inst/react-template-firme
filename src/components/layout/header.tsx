@@ -21,15 +21,15 @@ export default function Header() {
           </NavLink>
           <NavLink
             className={({ isActive }) => clsx("custom-link", { isActive })}
-            to={routes.photos}
-          >
-            Photos
-          </NavLink>
-          <NavLink
-            className={({ isActive }) => clsx("custom-link", { isActive })}
             to={routes.users}
           >
             Users
+          </NavLink>
+          <NavLink
+            className={({ isActive }) => clsx("custom-link", { isActive })}
+            to={routes.saved}
+          >
+            Saved
           </NavLink>
         </Mantine.Group>
       </Mantine.Group>
