@@ -6,7 +6,6 @@ import { useStore } from "../../stores/userSlice";
 import SavedRender from "./presentation";
 import UserTodosModal from "../users/components/userTodos";
 import DetailModal from "../posts/components/detail";
-import { useGetComments } from "../posts/services/getComments";
 
 export default function SavedPage() {
   const users = useStore((store) => store.users);
@@ -16,9 +15,6 @@ export default function SavedPage() {
 
   const [userId, setUserId] = useQueryState("user", parseAsInteger);
   const [postId, setPostId] = useQueryState("post", parseAsInteger);
-
-  const { data: comments = [], isPending: isPendingComments } =
-    useGetComments(postId);
 
   const onOpenUser = (userId: number) => {
     void setUserId(userId);
@@ -50,14 +46,15 @@ export default function SavedPage() {
             }}
           />
         )}
-        <DetailModal
-          comments={comments}
-          opened={Boolean(postId)}
-          onClose={() => {
-            void setPostId(null);
-          }}
-          isLoading={isPendingComments}
-        />
+        {postId && (
+          <DetailModal
+            postId={postId}
+            opened={Boolean(postId)}
+            onClose={() => {
+              void setPostId(null);
+            }}
+          />
+        )}
       </Fragment>
     );
   };

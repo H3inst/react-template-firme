@@ -6,7 +6,9 @@ const theme = createTheme({
   primaryShade: 8,
   defaultRadius: "md",
   black: "#212121",
-
+  fontSizes: {
+    sm: rem(16),
+  },
   components: {
     Modal: Modal.extend({
       styles: {

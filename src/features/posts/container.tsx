@@ -2,7 +2,6 @@ import { Fragment } from "react/jsx-runtime";
 
 import { parseAsInteger, useQueryState } from "nuqs";
 import { useGetPosts } from "./services/getPosts";
-import { useGetComments } from "./services/getComments";
 import { useStore } from "../../stores/userSlice";
 
 import PostsRender from "./presentation";
@@ -15,22 +14,19 @@ export default function PostsPage() {
   const savePost = useStore((store) => store.savePost);
 
   const [page, setPage] = useQueryState("page", parseAsInteger.withDefault(1));
-  const [post, setPost] = useQueryState("post", parseAsInteger);
+  const [postId, setPostId] = useQueryState("post", parseAsInteger);
 
   const { data: posts = [], isPending: isPendingPosts } = useGetPosts({
     _start: page * 10,
     _limit: 10,
   });
 
-  const { data: comments = [], isPending: isPendingComments } =
-    useGetComments(post);
-
   const onChangePage = (newPage: number) => {
     void setPage(newPage);
   };
 
   const onToggleDetail = (postId: number | null) => {
-    void setPost(postId);
+    void setPostId(postId);
   };
 
   const onSavePost = (post: IPost) => {
@@ -52,14 +48,15 @@ export default function PostsPage() {
           onOpenDetail={onToggleDetail}
           onSavePost={onSavePost}
         />
-        <DetailModal
-          comments={comments}
-          opened={Boolean(post)}
-          onClose={() => {
-            onToggleDetail(null);
-          }}
-          isLoading={isPendingComments}
-        />
+        {postId && (
+          <DetailModal
+            postId={postId}
+            opened={Boolean(postId)}
+            onClose={() => {
+              onToggleDetail(null);
+            }}
+          />
+        )}
       </Fragment>
     );
   };
