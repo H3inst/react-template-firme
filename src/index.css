@@ -1,5 +1,9 @@
 @import "./styles/components.css";
 
+html {
+  font-size: 14px;
+}
+
 body {
   background-color: var(--mantine-color-gray-1);
 }

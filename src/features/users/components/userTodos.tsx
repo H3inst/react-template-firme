@@ -1,14 +1,15 @@
 import * as Mantine from "@mantine/core";
-import type { ITodo } from "../types/todos";
+
+import { useMemo } from "react";
+import { useQueryState } from "nuqs";
+import { useGetUserTodos } from "../services/getUserTodos";
+
+import type { IUser } from "../types/users";
 
 interface IUserPostsModalProps {
   opened: boolean;
-  userName: string;
-  todos: ITodo[];
-  todoStatus: string | null;
   onClose: () => void;
-  onChangeTodoStatus: (todoStatus: string | null) => void;
-  isLoading: boolean;
+  user: IUser;
 }
 
 const STATUS = [
@@ -17,7 +18,34 @@ const STATUS = [
 ];
 
 export default function UserTodosModal(props: IUserPostsModalProps) {
-  const renderPosts = props.todos.map((todo) => (
+  const [todoStatus, setTodoStatus] = useQueryState("todoStatus");
+
+  const { data: todos = [], isPending: isLoadingTodos } = useGetUserTodos(
+    props.user.userId
+  );
+
+  const filteredTodos = useMemo(() => {
+    return todos.filter((todo) => {
+      if (todoStatus === "completed") {
+        return todo.todoCompleted;
+      }
+      if (todoStatus === "pending") {
+        return !todo.todoCompleted;
+      }
+      return true;
+    });
+  }, [todoStatus, todos]);
+
+  const onChangeTodoStatus = (value: string | null) => {
+    void setTodoStatus(value);
+  };
+
+  const onCloseModal = () => {
+    void setTodoStatus(null);
+    props.onClose();
+  };
+
+  const renderTodos = filteredTodos.map((todo) => (
     <Mantine.Paper key={todo.todoId} withBorder mb="sm" p="md">
       <Mantine.Group justify="space-between">
         <Mantine.Text>{todo.todoTitle}</Mantine.Text>
@@ -34,26 +62,26 @@ export default function UserTodosModal(props: IUserPostsModalProps) {
   const renderComponent = () => {
     return (
       <Mantine.Modal
-        title={`${props.userName} Todos`}
+        title={`${props.user.userName} Todos`}
         opened={props.opened}
-        onClose={props.onClose}
+        onClose={onCloseModal}
         size="xl"
       >
         <Mantine.Select
           label="Todo status"
-          value={props.todoStatus}
+          value={todoStatus}
           data={STATUS}
           mb="lg"
           placeholder="Select the todo status..."
-          onChange={props.onChangeTodoStatus}
+          onChange={onChangeTodoStatus}
           maw={300}
         />
-        {props.isLoading ? (
+        {isLoadingTodos ? (
           <Mantine.Center h={500}>
             <Mantine.Loader size="xl" />
           </Mantine.Center>
         ) : (
-          renderPosts
+          renderTodos
         )}
       </Mantine.Modal>
     );

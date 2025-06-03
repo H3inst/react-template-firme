@@ -9,6 +9,7 @@ interface IPostsRenderProps {
   isLoadingPosts: boolean;
   onChangePage: (page: number) => void;
   onOpenDetail: (postId: number) => void;
+  onSavePost: (post: IPost) => void;
 }
 
 export default function PostsRender(props: IPostsRenderProps) {
@@ -28,7 +29,13 @@ export default function PostsRender(props: IPostsRenderProps) {
         >
           <Icons.MessagesSquare width={16} />
         </Mantine.ActionIcon>
-        <Mantine.ActionIcon size="md" variant="subtle">
+        <Mantine.ActionIcon
+          size="md"
+          variant="subtle"
+          onClick={() => {
+            props.onSavePost(post);
+          }}
+        >
           <Icons.Pin width={16} />
         </Mantine.ActionIcon>
       </Mantine.Group>

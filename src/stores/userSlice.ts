@@ -1,6 +1,7 @@
 import { create } from "zustand";
-import type { IUser } from "../features/users/types/users";
 import { persist } from "zustand/middleware";
+
+import type { IUser } from "../features/users/types/users";
 import type { IPost } from "../features/posts/types/posts";
 
 interface StoreInitialState {
@@ -11,6 +12,8 @@ interface StoreInitialState {
 interface StoreActions {
   saveUser: (user: IUser) => void;
   savePost: (user: IPost) => void;
+  removePost: (postId: number) => void;
+  removeUser: (userId: number) => void;
 }
 
 const INITIAL_STATE = {
@@ -30,6 +33,16 @@ export const useStore = create<StoreInitialState & StoreActions>()(
       savePost: (post) => {
         set((state) => ({
           posts: [...state.posts, post],
+        }));
+      },
+      removeUser: (userId) => {
+        set((state) => ({
+          users: state.users.filter((user) => user.userId !== userId),
+        }));
+      },
+      removePost: (postId) => {
+        set((state) => ({
+          posts: state.posts.filter((post) => post.postId !== postId),
         }));
       },
     }),

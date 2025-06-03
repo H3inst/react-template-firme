@@ -1,9 +1,7 @@
 import { Fragment } from "react/jsx-runtime";
 
 import { parseAsInteger, useQueryState } from "nuqs";
-import { useMemo } from "react";
 import { useGetUsers } from "./services/getUsers";
-import { useGetUserTodos } from "./services/getUserTodos";
 import { useStore } from "../../stores/userSlice";
 
 import UsersRender from "./presentation";
@@ -15,30 +13,12 @@ export default function UsersPage() {
   const storedUsers = useStore((store) => store.users);
   const saveUser = useStore((store) => store.saveUser);
 
-  const [user, setUser] = useQueryState("user", parseAsInteger);
-  const [todoStatus, setTodoStatus] = useQueryState("todoStatus");
+  const [userId, setUserId] = useQueryState("user", parseAsInteger);
 
   const { data: users = [], isPending: isLoadingUsers } = useGetUsers();
-  const { data: todos = [], isPending: isLoadingTodos } = useGetUserTodos(user);
-
-  const filteredTodos = useMemo(() => {
-    return todos.filter((todo) => {
-      if (todoStatus === "completed") {
-        return todo.todoCompleted;
-      }
-      if (todoStatus === "pending") {
-        return !todo.todoCompleted;
-      }
-      return true;
-    });
-  }, [todoStatus, todos]);
 
   const onToggleModal = (userId: number | null) => {
-    void setUser(userId);
-  };
-
-  const onChangeTodoStatus = (value: string | null) => {
-    void setTodoStatus(value);
+    void setUserId(userId);
   };
 
   const onSaveUser = (user: IUser) => {
@@ -47,9 +27,10 @@ export default function UsersPage() {
       return;
     }
     saveUser(user);
+    alert("User saved")
   };
 
-  const userName = users.find((u) => u.userId === user)?.userName;
+  const user = users.find((u) => u.userId === userId);
 
   const renderComponent = () => {
     return (
@@ -60,18 +41,15 @@ export default function UsersPage() {
           onOpenUser={onToggleModal}
           onSaveUser={onSaveUser}
         />
-        <UserTodosModal
-          opened={Boolean(user)}
-          todos={filteredTodos}
-          userName={userName ?? ""}
-          isLoading={isLoadingTodos}
-          todoStatus={todoStatus}
-          onChangeTodoStatus={onChangeTodoStatus}
-          onClose={() => {
-            onToggleModal(null);
-            onChangeTodoStatus(null);
-          }}
-        />
+        {user && (
+          <UserTodosModal
+            opened={Boolean(userId)}
+            user={user}
+            onClose={() => {
+              onToggleModal(null);
+            }}
+          />
+        )}
       </Fragment>
     );
   };

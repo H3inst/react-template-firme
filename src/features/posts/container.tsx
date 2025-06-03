@@ -1,12 +1,19 @@
 import { Fragment } from "react/jsx-runtime";
+
 import { parseAsInteger, useQueryState } from "nuqs";
 import { useGetPosts } from "./services/getPosts";
+import { useGetComments } from "./services/getComments";
+import { useStore } from "../../stores/userSlice";
 
 import PostsRender from "./presentation";
 import DetailModal from "./components/detail";
-import { useGetComments } from "./services/getComments";
+
+import type { IPost } from "./types/posts";
 
 export default function PostsPage() {
+  const storedPosts = useStore((store) => store.posts);
+  const savePost = useStore((store) => store.savePost);
+
   const [page, setPage] = useQueryState("page", parseAsInteger.withDefault(1));
   const [post, setPost] = useQueryState("post", parseAsInteger);
 
@@ -26,6 +33,14 @@ export default function PostsPage() {
     void setPost(postId);
   };
 
+  const onSavePost = (post: IPost) => {
+    if (storedPosts.some((p) => p.postId === post.postId)) {
+      alert("The post was already added");
+      return;
+    }
+    savePost(post);
+  };
+
   const renderComponent = () => {
     return (
       <Fragment>
@@ -35,6 +50,7 @@ export default function PostsPage() {
           currentPage={Number(page)}
           onChangePage={onChangePage}
           onOpenDetail={onToggleDetail}
+          onSavePost={onSavePost}
         />
         <DetailModal
           comments={comments}
