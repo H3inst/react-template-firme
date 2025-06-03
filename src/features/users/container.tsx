@@ -27,7 +27,7 @@ export default function UsersPage() {
       return;
     }
     saveUser(user);
-    alert("User saved")
+    alert("User saved");
   };
 
   const user = users.find((u) => u.userId === userId);

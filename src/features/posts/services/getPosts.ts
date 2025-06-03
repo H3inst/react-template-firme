@@ -8,7 +8,7 @@ import type { IPostParams, IPostResponse } from "../types/posts";
 async function getPosts(params: IPostParams) {
   const { data: serviceData, headers } = await axios.get<IPostResponse[]>(
     "https://jsonplaceholder.typicode.com/posts",
-    { params }
+    { params },
   );
   return { serviceData, totalCount: headers["X-Total-Count"] as string };
 }

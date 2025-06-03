@@ -6,7 +6,7 @@ import { getCommentsAdapter } from "../adapters/comments";
 
 async function getComments(postId: number) {
   const { data: serviceData } = await axios.get<ICommentResponse[]>(
-    `https://jsonplaceholder.typicode.com/posts/${postId.toString()}/comments`
+    `https://jsonplaceholder.typicode.com/posts/${postId.toString()}/comments`,
   );
   return serviceData;
 }

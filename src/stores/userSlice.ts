@@ -46,6 +46,6 @@ export const useStore = create<StoreInitialState & StoreActions>()(
         }));
       },
     }),
-    { name: "store" }
-  )
+    { name: "store" },
+  ),
 );

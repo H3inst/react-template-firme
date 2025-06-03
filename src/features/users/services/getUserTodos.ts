@@ -7,7 +7,7 @@ import type { ITodosResponse } from "../types/todos";
 
 async function getUserTodos(userId: number) {
   const { data: serviceData } = await axios.get<ITodosResponse[]>(
-    `https://jsonplaceholder.typicode.com/users/${userId.toString()}/todos`
+    `https://jsonplaceholder.typicode.com/users/${userId.toString()}/todos`,
   );
   return serviceData;
 }

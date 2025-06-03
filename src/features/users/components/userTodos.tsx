@@ -21,7 +21,7 @@ export default function UserTodosModal(props: IUserPostsModalProps) {
   const [todoStatus, setTodoStatus] = useQueryState("todoStatus");
 
   const { data: todos = [], isPending: isLoadingTodos } = useGetUserTodos(
-    props.user.userId
+    props.user.userId,
   );
 
   const filteredTodos = useMemo(() => {

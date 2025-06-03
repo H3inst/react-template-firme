@@ -7,7 +7,7 @@ import type { IUserResponse } from "../types/users";
 
 async function getUsers() {
   const { data: serviceData } = await axios.get<IUserResponse[]>(
-    "https://jsonplaceholder.typicode.com/users"
+    "https://jsonplaceholder.typicode.com/users",
   );
   return serviceData;
 }
